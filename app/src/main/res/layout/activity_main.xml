@@ -32,6 +32,13 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content" />
 
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ble_on_off_btn"
+        android:onClick="@{mainActivity :: onClickButtonBluetoothOnOff}"
+        />
+
     <Button
         android:id="@+id/btn_search"
         android:text="Search"
