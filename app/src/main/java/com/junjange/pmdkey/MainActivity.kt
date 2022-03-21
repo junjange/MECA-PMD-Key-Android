@@ -57,10 +57,19 @@ class MainActivity : AppCompatActivity() {
             binding.bleOnOffBtn.isChecked = bluetoothAdapter?.isEnabled==true
         }
 
-        // 페이링 된 기기 목록에 표시
+        // 페이링 된 디바이스 목록에 표시
         btArrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
         deviceAddressArray = ArrayList()
         binding.listview.adapter = btArrayAdapter
+
+        // 페어링 된 디바이스 목록 불러오기
+        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter ?.bondedDevices
+        pairedDevices?.forEach { device ->
+            val deviceName = device.name
+            val deviceHardwareAddress = device.address // MAC address
+            btArrayAdapter?.add(deviceName)
+            deviceAddressArray?.add(deviceHardwareAddress)
+        }
 
 //        binding.listview.setOnItemClickListener(myOnItemClickListener())
 
@@ -70,6 +79,7 @@ class MainActivity : AppCompatActivity() {
     // 불루투스 활성화 토글 버튼
     fun onClickButtonBluetoothOnOff(view : View){
         if (bluetoothAdapter == null) {
+            Toast.makeText(applicationContext, "Device doesn't support Bluetooth", Toast.LENGTH_SHORT).show()
             // Device doesn't support Bluetooth
             Log.d("bluetoothAdapter","Device doesn't support Bluetooth")
         }else{
@@ -94,9 +104,6 @@ class MainActivity : AppCompatActivity() {
             btArrayAdapter?.add(deviceName)
             deviceAddressArray?.add(deviceHardwareAddress)
          }
-
-        btArrayAdapter?.add("deviceName")
-        deviceAddressArray?.add("deviceHardwareAddress")
 
         Log.d("ddd", btArrayAdapter.toString())
     }
