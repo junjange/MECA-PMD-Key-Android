@@ -20,7 +20,6 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 
-
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     var bluetoothAdapter: BluetoothAdapter? = null
@@ -45,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.BLUETOOTH_ADMIN
             )
+
         // 권한 요청
         ActivityCompat.requestPermissions(this@MainActivity, permissionList, 1)
 
@@ -52,9 +52,20 @@ class MainActivity : AppCompatActivity() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
         // 블루투스가 활성화 되어 있는지에 따라 toggle button 상태 변경
+        // PMD 와 연동이 되면 이미지의 색이 들어오게끔 구현
         if(bluetoothAdapter!=null){
-            // Device doesn't support Bluetooth
-            binding.bleOnOffBtn.isChecked = bluetoothAdapter?.isEnabled==true
+
+            if (bluetoothAdapter?.isEnabled == false){
+                binding.bleOnOffBtn.isChecked = false
+                binding.buggyImage.setImageResource(R.drawable.buggy_0)
+
+            }else{
+
+                binding.bleOnOffBtn.isChecked = true
+                binding.buggyImage.setImageResource(R.drawable.buggy_1)
+            }
+
+
         }
 
         // 페이링 된 디바이스 목록에 표시
@@ -86,8 +97,12 @@ class MainActivity : AppCompatActivity() {
             if (bluetoothAdapter?.isEnabled == false) { // 블루투스 꺼져 있으면 블루투스 활성화
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+                binding.buggyImage.setImageResource(R.drawable.buggy_1)
+
             } else{ // 블루투스 켜져있으면 블루투스 비활성화
                 bluetoothAdapter?.disable()
+                binding.buggyImage.setImageResource(R.drawable.buggy_0)
+
             }
         }
     }
