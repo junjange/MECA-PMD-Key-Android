@@ -1,9 +1,6 @@
-package com.junjange.pmdkey
+package com.junjange.pmdkey.component
 
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import android.content.ContentValues.TAG
-import android.util.Log
 import java.io.IOException
 import android.os.SystemClock
 import java.io.InputStream

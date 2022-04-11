@@ -1,8 +1,11 @@
 package com.junjange.pmdkey.adapter
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.junjange.pmdkey.R
@@ -27,20 +30,43 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
 
     // 뷰 홀더 설정
     inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+        @SuppressLint("SetTextI18n")
         fun setItem(item : ModelWeather) {
+            val imgWeather = itemView.findViewById<ImageView>(R.id.imgWeather)  // 날씨 이미지
             val tvTime = itemView.findViewById<TextView>(R.id.tvTime)           // 시각
             val tvRainType = itemView.findViewById<TextView>(R.id.tvRainType)   // 강수 형태
             val tvHumidity = itemView.findViewById<TextView>(R.id.tvHumidity)   // 습도
             val tvSky = itemView.findViewById<TextView>(R.id.tvSky)             // 하늘 상태
             val tvTemp = itemView.findViewById<TextView>(R.id.tvTemp)           // 온도
-            val tvRecommends = itemView.findViewById<TextView>(R.id.tvRecommends)   // 옷 추천
 
+            Log.d("ttt", item.fcstTime)
+            imgWeather.setImageResource(getRainImage(item.rainType, item.sky))
             tvTime.text = item.fcstTime
             tvRainType.text = getRainType(item.rainType)
             tvHumidity.text = item.humidity
             tvSky.text = getSky(item.sky)
             tvTemp.text = item.temp + "°"
-            tvRecommends.text = getRecommends(item.temp.toInt())
+        }
+    }
+
+    // 강수 형태
+    fun getRainImage(rainType : String, sky: String) : Int {
+        return when(rainType) {
+            "0" -> getWeatherImage(sky)
+            "1" -> R.drawable.rainy
+            "2" -> R.drawable.hail
+            "3" -> R.drawable.snowy
+            else -> R.drawable.ic_launcher_foreground
+        }
+    }
+
+    fun getWeatherImage(sky : String) : Int {
+        // 하늘 상태
+        return when(sky) {
+            "1" -> R.drawable.sun                       // 맑음
+            "3" ->  R.drawable.blur                     // 구름 많음
+            "4" -> R.drawable.cloudy                    // 흐림
+            else -> R.drawable.ic_launcher_foreground   // 오류
         }
     }
 
@@ -65,17 +91,4 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
         }
     }
 
-    // 옷 추천
-    fun getRecommends(temp : Int) : String{
-        return when (temp) {
-            in 5..8 -> "울 코트, 가죽 옷, 기모"
-            in 9..11 -> "트렌치 코트, 야상, 점퍼"
-            in 12..16 -> "자켓, 가디건, 청자켓"
-            in 17..19 -> "니트, 맨투맨, 후드, 긴바지"
-            in 20..22 -> "블라우스, 긴팔 티, 슬랙스"
-            in 23..27 -> "얇은 셔츠, 반바지, 면바지"
-            in 28..50 -> "민소매, 반바지, 린넨 옷"
-            else -> "패딩, 누빔 옷, 목도리"
-        }
-    }
 }

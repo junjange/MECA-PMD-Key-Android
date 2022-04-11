@@ -60,12 +60,43 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/btn_temp"
-        android:text="날씨 예비 버튼"
-        android:onClick="@{mainActivity :: onClickButtonTemp}"
-        android:layout_width="200dp"
+
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="mm/dd의 날씨"
+        android:textSize="30dp"
+        android:textColor="@color/black"
+        android:layout_margin="10dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="에러 : "
+        android:textSize="30dp"
+        android:textColor="@color/black"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/weatherRecyclerView"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+
+    <Button
+        android:id="@+id/btnRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="새로고침"/>
 
 
 

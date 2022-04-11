@@ -21,10 +21,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // url 변수 지정
-        buildConfigField "String", "URL_VACCINE", properties['url.vaccine']
-
-        // endpoint 변수 지정
-        buildConfigField "String", "ENDPOINT_GET_VACCINE_STATUS", properties['endPoint.getVaccineStatus']
+        buildConfigField "String", "URL_WEATHER", properties['url.weather']
 
         // api key 변수 지정
         buildConfigField "String", "API_KEY", properties['api.key']
@@ -66,4 +63,10 @@ dependencies {
     // retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // 위치
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+    // 권한
+    implementation "io.github.ParkSangGwon:tedpermission:2.3.0"
 }
