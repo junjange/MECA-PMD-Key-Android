@@ -1,4 +1,4 @@
-package com.junjange.pmdkey
+package com.junjange.pmdkey.ui
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -19,6 +19,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.junjange.pmdkey.R
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -149,6 +150,11 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    fun onClickButtonTemp(view: View){
+        val intent = Intent(applicationContext, WeatherActivity::class.java)
+        startActivity(intent)
     }
 
     // Create a BroadcastReceiver for ACTION_FOUND.

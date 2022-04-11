@@ -7,14 +7,14 @@
     <data>
         <variable
             name="mainActivity"
-            type="com.junjange.pmdkey.MainActivity" />
+            type="com.junjange.pmdkey.ui.MainActivity" />
 
     </data>
 <LinearLayout
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".ui.MainActivity"
     android:orientation="vertical"
     android:gravity="center">
 
@@ -57,6 +57,13 @@
         android:id="@+id/btn_send"
         android:text="Send a"
         android:onClick="@{mainActivity :: onClickButtonSend}"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn_temp"
+        android:text="날씨 예비 버튼"
+        android:onClick="@{mainActivity :: onClickButtonTemp}"
         android:layout_width="200dp"
         android:layout_height="wrap_content"/>
 
