@@ -34,21 +34,52 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
         fun setItem(item : ModelWeather) {
             val imgWeather = itemView.findViewById<ImageView>(R.id.imgWeather)  // 날씨 이미지
             val tvTime = itemView.findViewById<TextView>(R.id.tvTime)           // 시각
-            val tvRainType = itemView.findViewById<TextView>(R.id.tvRainType)   // 강수 형태
+//            val tvRainType = itemView.findViewById<TextView>(R.id.tvRainType)   // 강수 형태
             val tvHumidity = itemView.findViewById<TextView>(R.id.tvHumidity)   // 습도
-            val tvSky = itemView.findViewById<TextView>(R.id.tvSky)             // 하늘 상태
+//            val tvSky = itemView.findViewById<TextView>(R.id.tvSky)             // 하늘 상태
             val tvTemp = itemView.findViewById<TextView>(R.id.tvTemp)           // 온도
 
-            Log.d("ttt", item.fcstTime)
+
+            Log.d("tttttt", item.fcstTime)
+
+            if(item.fcstTime != "지금"){
+
+            }
             imgWeather.setImageResource(getRainImage(item.rainType, item.sky))
-            tvTime.text = item.fcstTime
-            tvRainType.text = getRainType(item.rainType)
-            tvHumidity.text = item.humidity
-            tvSky.text = getSky(item.sky)
+            tvTime.text = getTime(item.fcstTime)
+//            tvRainType.text = getRainType(item.rainType)
+            tvHumidity.text = item.humidity +"%"
+//            tvSky.text = getSky(item.sky)
             tvTemp.text = item.temp + "°"
         }
     }
 
+    fun getTime(factTime : String): String {
+        if(factTime != "지금"){
+            var hourSystem : Int = factTime.toInt()
+            var hourSystemString = ""
+
+
+            if(hourSystem == 2400){
+                return "오전 12시"
+            }else if(hourSystem >= 1200){
+                hourSystem -= 1200
+                hourSystemString = hourSystem.toString()
+                return "오후 ${hourSystemString[0]}시"
+
+            }else{
+                hourSystem -= 1000
+                hourSystemString = hourSystem.toString()
+
+                return "오전 ${hourSystemString[0]} 시"
+            }
+
+        }else{
+            return factTime
+        }
+
+
+    }
     // 강수 형태
     fun getRainImage(rainType : String, sky: String) : Int {
         return when(rainType) {
@@ -64,8 +95,8 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
         // 하늘 상태
         return when(sky) {
             "1" -> R.drawable.sun                       // 맑음
-            "3" ->  R.drawable.blur                     // 구름 많음
-            "4" -> R.drawable.cloudy                    // 흐림
+            "3" ->  R.drawable.cloudy                     // 구름 많음
+            "4" -> R.drawable.blur                 // 흐림
             else -> R.drawable.ic_launcher_foreground   // 오류
         }
     }
