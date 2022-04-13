@@ -40,11 +40,7 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
             val tvTemp = itemView.findViewById<TextView>(R.id.tvTemp)           // 온도
 
 
-            Log.d("tttttt", item.fcstTime)
 
-            if(item.fcstTime != "지금"){
-
-            }
             imgWeather.setImageResource(getRainImage(item.rainType, item.sky))
             tvTime.text = getTime(item.fcstTime)
 //            tvRainType.text = getRainType(item.rainType)
@@ -62,7 +58,9 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
 
             if(hourSystem == 2400){
                 return "오전 12시"
-            }else if(hourSystem >= 1200){
+            }else if(hourSystem == 1200){
+                return "오후 12시"
+            } else if(hourSystem > 1200){
                 hourSystem -= 1200
                 hourSystemString = hourSystem.toString()
                 return "오후 ${hourSystemString[0]}시"
@@ -87,7 +85,8 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
             "1" -> R.drawable.rainy
             "2" -> R.drawable.hail
             "3" -> R.drawable.snowy
-            else -> R.drawable.ic_launcher_foreground
+            "4" -> R.drawable.brash
+            else -> getWeatherImage(sky)
         }
     }
 

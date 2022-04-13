@@ -22,7 +22,9 @@
         android:id="@+id/buggy_image"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:src="@drawable/buggy_0" />
+        android:src="@drawable/mobility_0"
+        android:layout_margin="20dp"
+        />
 
 
     <TextView
@@ -59,6 +61,15 @@
         android:onClick="@{mainActivity :: onClickButtonSend}"
         android:layout_width="200dp"
         android:layout_height="wrap_content"/>
+
+
+    <Button
+        android:id="@+id/btn_map"
+        android:text="Map"
+        android:onClick="@{mainActivity :: onClickButtonMap}"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"/>
+
 
 
 

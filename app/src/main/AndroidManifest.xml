@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.junjange.pmdkey" >
+    package="com.junjange.pmdkey">
     <!-- 앱이 블루투스 기기와 상호작용하기 위한 권한 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" /> <!-- 블루투스 검색하는 경우 -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- 앱이 블루투스에서 기기를 검색할 수 있도록 하는 경우 -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> <!-- 앱이 이미 페어링된 블루투스와 통신하는 경우 -->
+
     <!-- 위치 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <!-- 인터넷 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -21,20 +23,30 @@
         android:roundIcon="@drawable/autonomous_car"
         android:supportsRtl="true"
         android:theme="@style/Theme.PMDKey"
-        android:usesCleartextTraffic="true" >
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        >
+        <activity
+            android:name=".ui.MapActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.MainActivity"
-            android:exported="true"  />
+            android:exported="true" />
         <activity
             android:name=".ui.SplashActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:exported="true" >
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <!-- 네이티브 앱 키 추가 -->
+        <meta-data android:name="com.kakao.sdk.AppKey" android:value= "" />
+
     </application>
 
 </manifest>

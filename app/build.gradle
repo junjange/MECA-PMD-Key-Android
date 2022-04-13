@@ -26,6 +26,10 @@ android {
         // api key 변수 지정
         buildConfigField "String", "API_KEY", properties['api.key']
 
+        buildConfigField "String", "KAKAO_MAP_API_KEY", properties['kakao.map.api.key']
+
+//        manifestPlaceholders["KAKAO_MAP_API_KEY"] = "kakao.map.api.key"
+
     }
 
     buildTypes {
@@ -69,4 +73,7 @@ dependencies {
 
     // 권한
     implementation "io.github.ParkSangGwon:tedpermission:2.3.0"
+
+    // Kakao map
+    implementation files('libs/libDaumMapAndroid.jar')
 }

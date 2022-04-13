@@ -18,11 +18,16 @@ import android.widget.Toast
 import android.content.IntentFilter
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Point
+import android.media.tv.TvContract.Programs.Genres.encode
+import android.net.Uri.encode
 import android.os.Build
 import android.os.Looper
+import android.util.Base64.encode
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import com.google.android.gms.common.util.Base64Utils.encode
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -36,10 +41,11 @@ import com.junjange.pmdkey.data.WEATHER
 import com.junjange.pmdkey.network.WeatherObject
 import retrofit2.Call
 import retrofit2.Response
+import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-
+import android.util.Base64
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     var bluetoothAdapter: BluetoothAdapter? = null
@@ -58,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = setContentView(this, R.layout.activity_main)
         binding.mainActivity = this
+
 
         // Get permission
         val permissionList = arrayOf<String>(
@@ -85,12 +92,12 @@ class MainActivity : AppCompatActivity() {
 
             if (bluetoothAdapter?.isEnabled == false){
                 binding.bleOnOffBtn.isChecked = false
-                binding.buggyImage.setImageResource(R.drawable.buggy_0)
+                binding.buggyImage.setImageResource(R.drawable.mobility_0)
 
             }else{
 
                 binding.bleOnOffBtn.isChecked = true
-                binding.buggyImage.setImageResource(R.drawable.buggy_1)
+                binding.buggyImage.setImageResource(R.drawable.mobility_1)
             }
 
 
@@ -117,6 +124,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun onClickButtonMap(view: View){
+        startActivity(Intent(this@MainActivity,MapActivity::class.java))
+
+    }
+
     // 불루투스 활성화 토글 버튼
     fun onClickButtonBluetoothOnOff(view : View){
         if (bluetoothAdapter == null) {
@@ -127,11 +139,11 @@ class MainActivity : AppCompatActivity() {
             if (bluetoothAdapter?.isEnabled == false) { // 블루투스 꺼져 있으면 블루투스 활성화
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-                binding.buggyImage.setImageResource(R.drawable.buggy_1)
+                binding.buggyImage.setImageResource(R.drawable.mobility_1)
 
             } else{ // 블루투스 켜져있으면 블루투스 비활성화
                 bluetoothAdapter?.disable()
-                binding.buggyImage.setImageResource(R.drawable.buggy_0)
+                binding.buggyImage.setImageResource(R.drawable.mobility_0)
 
             }
         }
@@ -251,7 +263,6 @@ class MainActivity : AppCompatActivity() {
                         }
                         index++
                     }
-                    Log.d("ttt", weatherArr[0].fcstTime )
 
                     weatherArr[0].fcstTime = "지금"
                     // 각 날짜 배열 시간 설정
@@ -295,7 +306,7 @@ class MainActivity : AppCompatActivity() {
                             curPoint = Common().dfsXyConv(location.latitude, location.longitude)
 
                             // 오늘 날짜 텍스트뷰 설정
-                            binding.tvDate.text = SimpleDateFormat("MM월 dd일", Locale.getDefault()).format(Calendar.getInstance().time) + "날씨"
+                            binding.tvDate.text = SimpleDateFormat("MM월 dd일", Locale.getDefault()).format(Calendar.getInstance().time) + " 날씨"
                             // nx, ny지점의 날씨 가져와서 설정하기
                             setWeather(curPoint!!.x, curPoint!!.y)
                         }
@@ -322,4 +333,5 @@ class MainActivity : AppCompatActivity() {
     fun onClickButtonSend(view: View){
 
     }
+
 }
