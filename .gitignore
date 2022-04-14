@@ -13,3 +13,13 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+
+# api url
+url.weather="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/"
+
+# api key
+api.key="getUltraSrtFcst?serviceKey=Pbf3CrVpW1Tu8fCFGfn7kmJZ%2FelaNXNA8wbegwrgXMtpboJYYQGP3Fl0DuodrxfWXmlUsuhHJ4G%2BPrPdnRG9CA%3D%3D"
+
+# Kakao map api key
+kakao.map.api.key = "9d202ad4bc87bd3763809251bc635ba1"

@@ -45,7 +45,7 @@
 
 
         <!-- 네이티브 앱 키 추가 -->
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value= "" />
+        <meta-data android:name="com.kakao.sdk.AppKey" android:value= "${KAKAO_MAP_NATIVE_KEY}" />
 
     </application>
 

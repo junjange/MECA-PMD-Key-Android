@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 apply plugin : 'kotlin-kapt'
 
@@ -26,9 +27,8 @@ android {
         // api key 변수 지정
         buildConfigField "String", "API_KEY", properties['api.key']
 
-        buildConfigField "String", "KAKAO_MAP_API_KEY", properties['kakao.map.api.key']
-
-//        manifestPlaceholders["KAKAO_MAP_API_KEY"] = "kakao.map.api.key"
+        // kakao map rest api key 변수 지정
+        buildConfigField "String", "KAKAO_MAP_REST_API_KEY", properties['kakao.map.rest.api.key']
 
     }
 
