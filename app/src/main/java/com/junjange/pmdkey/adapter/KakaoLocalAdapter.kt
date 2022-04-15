@@ -11,7 +11,7 @@ import com.junjange.pmdkey.data.ModelKakaoLocal
 
 class KakaoLocalAdapter(val itemList: ArrayList<ModelKakaoLocal>): RecyclerView.Adapter<KakaoLocalAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KakaoLocalAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.`list_ltem_kakao_local.xml`, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_ltem_kakao_local, parent, false)
         return ViewHolder(view)
     }
 
@@ -23,6 +23,7 @@ class KakaoLocalAdapter(val itemList: ArrayList<ModelKakaoLocal>): RecyclerView.
         holder.name.text = itemList[position].name
         holder.road.text = itemList[position].road
         holder.address.text = itemList[position].address
+
         // 아이템 클릭 이벤트
         holder.itemView.setOnClickListener {
             itemClickListener.onClick(it, position)

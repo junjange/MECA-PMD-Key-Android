@@ -10,16 +10,108 @@
             type="com.junjange.pmdkey.ui.MapActivity" />
     </data>
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.MapActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="1dp"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/searchViewLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="18dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="1dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_search_field"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_baseline_search_24"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:hint="장소/주소를 입력하세요."
+                    android:textSize="14sp" />
+
+                <ImageButton
+                    android:id="@+id/textClearButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="12dp"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:src="@drawable/ic_baseline_cancel_24"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_list"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_weight="0.8"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/noResultCard"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="32dp"
+            android:background="#ffffff"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="검색 결과가 없습니다." />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+
     <net.daum.mf.map.api.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -27,83 +119,205 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.136" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="48dp"
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/et_search_field"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardSurroundMeter"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:hint="장소 입력"
-            android:inputType="textPersonName"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_search"
-            app:layout_constraintEnd_toStartOf="@+id/btn_search"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btn_search" />
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/white"
+            android:clipToPadding="true"
+            app:cardCornerRadius="16dp">
 
-        <Button
-            android:id="@+id/btn_search"
-            style="@style/Widget.AppCompat.Button.Small"
+            <TextView
+                android:id="@+id/btn_surround_meter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="MY PMD"
+                android:textColor="#0054bb" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:clipToPadding="true"
+            app:cardCornerRadius="16dp">
+
+            <ImageButton
+                android:id="@+id/btn_current_position"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_baseline_my_location_24"
+                app:tint="#0054bb"
+                android:contentDescription="TODO" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/balanceCheckCard"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="start|bottom"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="58dp"
+        android:backgroundTint="@color/white"
+        android:clipToPadding="true"
+        app:cardCornerRadius="16dp">
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="검색"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="#E8EAF6"
-            app:layout_constraintBottom_toTopOf="@+id/btn_nextPage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_search" />
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/ic_launcher_background"-->
+<!--                app:tint="@color/white" />-->
 
-        <Button
-            android:id="@+id/btn_prevPage"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:enabled="false"
-            android:text="이전"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:src="@drawable/ic_launcher_background"
+                android:text="길찾기"
+                android:textColor="#0054bb" />
 
-        <Button
-            android:id="@+id/btn_nextPage"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:enabled="false"
-            android:text="다음"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_pageNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:textColor="?android:attr/textColorPrimary"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_nextPage"
-            app:layout_constraintEnd_toStartOf="@+id/btn_nextPage"
-            app:layout_constraintStart_toEndOf="@+id/btn_prevPage"
-            app:layout_constraintTop_toTopOf="@+id/btn_nextPage" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>
 
 </layout>
+
+
+<!--<net.daum.mf.map.api.MapView-->
+<!--android:id="@+id/mapView"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="0dp"-->
+<!--app:layout_constraintBottom_toTopOf="@+id/constraintLayout"-->
+<!--app:layout_constraintEnd_toEndOf="parent"-->
+<!--app:layout_constraintHorizontal_bias="0.0"-->
+<!--app:layout_constraintStart_toStartOf="parent"-->
+<!--app:layout_constraintTop_toTopOf="parent"-->
+<!--app:layout_constraintVertical_bias="0.136" />-->
+
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--android:id="@+id/constraintLayout"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="350dp"-->
+<!--app:layout_constraintBottom_toBottomOf="parent"-->
+<!--app:layout_constraintEnd_toEndOf="parent"-->
+<!--app:layout_constraintStart_toStartOf="parent">-->
+
+<!--<EditText-->
+<!--    android:id="@+id/et_search_field"-->
+<!--    android:layout_width="0dp"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_marginStart="8dp"-->
+<!--    android:layout_marginEnd="8dp"-->
+<!--    android:ems="10"-->
+<!--    android:hint="장소 입력"-->
+<!--    android:inputType="textPersonName"-->
+<!--    android:textSize="14sp"-->
+<!--    app:layout_constraintBottom_toBottomOf="@+id/btn_search"-->
+<!--    app:layout_constraintEnd_toStartOf="@+id/btn_search"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintTop_toTopOf="@+id/btn_search" />-->
+
+<!--<Button-->
+<!--    android:id="@+id/btn_search"-->
+<!--    style="@style/Widget.AppCompat.Button.Small"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_marginEnd="8dp"-->
+<!--    android:text="검색"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--<androidx.recyclerview.widget.RecyclerView-->
+<!--    android:id="@+id/rv_list"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="0dp"-->
+<!--    android:background="#E8EAF6"-->
+<!--    app:layout_constraintBottom_toTopOf="@+id/btn_nextPage"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintTop_toBottomOf="@+id/btn_search" />-->
+
+<!--<LinearLayout-->
+<!--    android:id="@+id/emptyFolderLayout"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:orientation="vertical"-->
+<!--    android:gravity="center"-->
+<!--    android:background="#E8EAF6"-->
+<!--    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--    app:layout_constraintLeft_toLeftOf="parent"-->
+<!--    app:layout_constraintRight_toRightOf="parent"-->
+<!--    app:layout_constraintTop_toTopOf="parent">-->
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="16sp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:text="오늘은 어디로 떠날까요?"/>-->
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="12sp"-->
+<!--        android:text="장소를 입력해주세요."/>-->
+
+
+<!--<Button-->
+<!--    android:id="@+id/btn_prevPage"-->
+<!--    style="@style/Widget.AppCompat.Button"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_marginStart="8dp"-->
+<!--    android:enabled="false"-->
+<!--    android:text="이전"-->
+<!--    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--    app:layout_constraintStart_toStartOf="parent" />-->
+
+<!--<Button-->
+<!--    android:id="@+id/btn_nextPage"-->
+<!--    style="@style/Widget.AppCompat.Button"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_marginEnd="8dp"-->
+<!--    android:enabled="false"-->
+<!--    android:text="다음"-->
+<!--    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--    app:layout_constraintEnd_toEndOf="parent" />-->
+
+<!--<TextView-->
+<!--    android:id="@+id/tv_pageNumber"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:text="1"-->
+<!--    android:textColor="?android:attr/textColorPrimary"-->
+<!--    app:layout_constraintBottom_toBottomOf="@+id/btn_nextPage"-->
+<!--    app:layout_constraintEnd_toStartOf="@+id/btn_nextPage"-->
+<!--    app:layout_constraintStart_toEndOf="@+id/btn_prevPage"-->
+<!--    app:layout_constraintTop_toTopOf="@+id/btn_nextPage" />-->
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

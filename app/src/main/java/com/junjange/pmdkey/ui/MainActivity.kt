@@ -20,6 +20,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Point
+import android.location.Location
+import android.location.LocationManager
 import android.media.tv.TvContract.Programs.Genres.encode
 import android.net.Uri.encode
 import android.os.Build
@@ -46,6 +48,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import android.util.Base64
+import com.junjange.pmdkey.databinding.ActivityMapBinding
+import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPoint
+
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     var bluetoothAdapter: BluetoothAdapter? = null
@@ -58,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     private var baseTime = "1400"      // 발표 시각
     private var curPoint : Point? = null    // 현재 위치의 격자 좌표를 저장할 포인트
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "MissingPermission")
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +85,6 @@ class MainActivity : AppCompatActivity() {
 
         // 권한 요청
         ActivityCompat.requestPermissions(this@MainActivity, permissionList, 1)
-
 
 
 
@@ -130,6 +135,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // 불루투스 활성화 토글 버튼
+    @SuppressLint("MissingPermission")
     fun onClickButtonBluetoothOnOff(view : View){
         if (bluetoothAdapter == null) {
             Toast.makeText(applicationContext, "Device doesn't support Bluetooth", Toast.LENGTH_SHORT).show()
@@ -151,6 +157,7 @@ class MainActivity : AppCompatActivity() {
 
 
     // 페어링 된 디바이스 목록 불러오기
+    @SuppressLint("MissingPermission")
     fun onClickButtonPaired(view : View){
         btArrayAdapter?.clear()
 
@@ -160,12 +167,13 @@ class MainActivity : AppCompatActivity() {
             val deviceHardwareAddress = device.address // MAC address
             btArrayAdapter?.add(deviceName)
             deviceAddressArray?.add(deviceHardwareAddress)
-         }
+        }
 
         Log.d("ddd", btArrayAdapter.toString())
     }
 
     // 주변 기기 검색하기
+    @SuppressLint("MissingPermission")
     fun onClickButtonSearch(view : View){
 
         if (bluetoothAdapter?.isDiscovering == true) {
@@ -184,7 +192,7 @@ class MainActivity : AppCompatActivity() {
                 val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
                 registerReceiver(receiver, filter)
 
-              // 블루투스가 켜지 있지 않다면
+                // 블루투스가 켜지 있지 않다면
             } else {
                 Toast.makeText(applicationContext, "bluetooth not on", Toast.LENGTH_SHORT).show()
             }
@@ -196,6 +204,7 @@ class MainActivity : AppCompatActivity() {
 
     // Create a BroadcastReceiver for ACTION_FOUND.
     private val receiver = object : BroadcastReceiver() {
+        @SuppressLint("MissingPermission")
         override fun onReceive(context: Context?, intent: Intent) {
             when(intent.action) {
                 BluetoothDevice.ACTION_FOUND -> {
@@ -287,6 +296,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // 내 현재 위치의 위경도를 격자 좌표로 변환하여 해당 위치의 날씨정보 설정하기
+    @SuppressLint("MissingPermission")
     private fun requestLocation() {
         val locationClient = LocationServices.getFusedLocationProviderClient(this@MainActivity)
 

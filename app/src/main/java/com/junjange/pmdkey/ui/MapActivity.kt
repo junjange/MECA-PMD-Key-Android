@@ -2,11 +2,18 @@ package com.junjange.pmdkey.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.KeyEvent.ACTION_UP
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.junjange.pmdkey.BuildConfig
+import com.junjange.pmdkey.R
 import com.junjange.pmdkey.adapter.KakaoLocalAdapter
 import com.junjange.pmdkey.data.ModelKakaoLocal
 import com.junjange.pmdkey.data.ResultSearchKeyword
@@ -14,6 +21,8 @@ import com.junjange.pmdkey.databinding.ActivityMapBinding
 import com.junjange.pmdkey.network.KakaoLocalInterface
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
+import net.daum.mf.map.api.MapView
+import okhttp3.internal.Internal.instance
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,9 +31,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MapActivity : AppCompatActivity() {
+
     companion object {
         const val BASE_URL = "https://dapi.kakao.com/"
         const val API_KEY = BuildConfig.KAKAO_MAP_REST_API_KEY  // REST API 키
+
+
     }
 
     private lateinit var binding : ActivityMapBinding
@@ -39,9 +51,15 @@ class MapActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+
+        // 현재 위치 추적
+        binding.mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+
+
         // 리사이클러 뷰
         binding.rvList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvList.adapter = listAdapter
+
         // 리스트 아이템 클릭 시 해당 위치로 이동
         listAdapter.setItemClickListener(object: KakaoLocalAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
@@ -50,27 +68,56 @@ class MapActivity : AppCompatActivity() {
             }
         })
 
-        // 검색 버튼
-        binding.btnSearch.setOnClickListener {
-            keyword = binding.etSearchField.text.toString()
-            pageNumber = 1
-            searchKeyword(keyword, pageNumber)
+        binding.etSearchField.apply {
+            this.hint = "장소/주소를 입력해주세요"
+
+            // EditText 에 포커스가 갔을 때 ClearButton 활성화
+            this.setOnFocusChangeListener { v, hasFocus ->
+                Log.d("Ttt", hasFocus.toString())
+                if (hasFocus) {
+                    binding.textClearButton.visibility = View.VISIBLE
+                } else {
+                    binding.textClearButton.visibility = View.GONE
+                }
+            }
         }
 
-        // 이전 페이지 버튼
-        binding.btnPrevPage.setOnClickListener {
-            pageNumber--
-            binding.tvPageNumber.text = pageNumber.toString()
-            searchKeyword(keyword, pageNumber)
+        binding.etSearchField.setOnKeyListener { _, keyCode, event ->
+
+            if ((event.action== KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                binding.rvList.visibility = View.VISIBLE
+                keyword = binding.etSearchField.text.toString()
+                pageNumber = 1
+                searchKeyword(keyword, pageNumber)
+                binding.mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+
+                // 엔터가 눌릴 때 하고 싶은 일
+
+                true
+
+            } else {
+
+                false
+
+            }
+        }
+        binding.btnCurrentPosition.setOnClickListener {
+            Log.d("ttt"," tttttt")
+
+            binding.mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
         }
 
-        // 다음 페이지 버튼
-        binding.btnNextPage.setOnClickListener {
-            pageNumber++
-            binding.tvPageNumber.text = pageNumber.toString()
-            searchKeyword(keyword, pageNumber)
+        // ClearButton 눌렀을 때 쿼리 Clear
+        binding.textClearButton.setOnClickListener {
+            binding.etSearchField.text.clear()
+            binding.rvList.visibility = View.GONE
         }
+
     }
+
+
+
 
     // 키워드 검색 함수
     private fun searchKeyword(keyword: String, page: Int) {
@@ -96,12 +143,14 @@ class MapActivity : AppCompatActivity() {
     }
 
     // 검색 결과 처리 함수
-    private fun addItemsAndMarkers(searchResult: ResultSearchKeyword?) {
+    fun addItemsAndMarkers(searchResult: ResultSearchKeyword?) {
         if (!searchResult?.documents.isNullOrEmpty()) {
+
             // 검색 결과 있음
             listItems.clear()                   // 리스트 초기화
             binding.mapView.removeAllPOIItems() // 지도의 마커 모두 제거
             for (document in searchResult!!.documents) {
+
                 // 결과를 리사이클러 뷰에 추가
                 val item = ModelKakaoLocal(document.place_name,
                     document.road_address_name,
@@ -114,8 +163,10 @@ class MapActivity : AppCompatActivity() {
                 val point = MapPOIItem()
                 point.apply {
                     itemName = document.place_name
-                    mapPoint = MapPoint.mapPointWithGeoCoord(document.y.toDouble(),
-                        document.x.toDouble())
+                    mapPoint = MapPoint.mapPointWithGeoCoord(
+                        document.y.toDouble(),
+                        document.x.toDouble()
+                    )
                     markerType = MapPOIItem.MarkerType.BluePin
                     selectedMarkerType = MapPOIItem.MarkerType.RedPin
                 }
@@ -123,13 +174,45 @@ class MapActivity : AppCompatActivity() {
             }
             listAdapter.notifyDataSetChanged()
 
-            binding.btnNextPage.isEnabled = !searchResult.meta.is_end // 페이지가 더 있을 경우 다음 버튼 활성화
-            binding.btnPrevPage.isEnabled = pageNumber != 1             // 1페이지가 아닐 경우 이전 버튼 활성화
+
 
         } else {
+
             // 검색 결과 없음
             Toast.makeText(this, "검색 결과가 없습니다", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    /**
+     * 키보드 이외의 영역을 터치했을 때, 키보드를 숨기는 동작
+     */
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        val view = currentFocus
+        if (view != null && (ev!!.action === ACTION_UP || MotionEvent.ACTION_MOVE === ev!!.action) &&
+            view is EditText && !view.javaClass.name.startsWith("android.webkit.")
+        ) {
+
+            binding.noResultCard.visibility = View.GONE
+
+            val scrcoords = IntArray(2)
+            view.getLocationOnScreen(scrcoords)
+            val x = ev!!.rawX + view.getLeft() - scrcoords[0]
+            val y = ev!!.rawY + view.getTop() - scrcoords[1]
+            if (x < view.getLeft() || x > view.getRight() || y < view.getTop() || y > view.getBottom()) (this.getSystemService(
+                INPUT_METHOD_SERVICE
+            ) as InputMethodManager).hideSoftInputFromWindow(
+                this.window.decorView.applicationWindowToken, 0
+            )
+        }
+
+        return super.dispatchTouchEvent(ev)
+    }
+
+
+    override fun onDestroy() {
+        listItems.clear()                   // 리스트 초기화
+        binding.mapView.removeAllPOIItems() // 지도의 마커 모두 제거
+        super.onDestroy()
     }
 
 }

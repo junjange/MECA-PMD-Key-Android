@@ -56,8 +56,14 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
             var hourSystemString = ""
 
 
-            if(hourSystem == 2400){
+            if(hourSystem == 0){
                 return "오전 12시"
+            }else if(hourSystem > 2100){
+                hourSystem -= 1200
+                hourSystemString = hourSystem.toString()
+                return "오후 ${hourSystemString[0]}${hourSystemString[1]}시"
+
+
             }else if(hourSystem == 1200){
                 return "오후 12시"
             } else if(hourSystem > 1200){
@@ -65,11 +71,18 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
                 hourSystemString = hourSystem.toString()
                 return "오후 ${hourSystemString[0]}시"
 
-            }else{
-                hourSystem -= 1000
+            }
+
+            else if(hourSystem >= 1000){
                 hourSystemString = hourSystem.toString()
 
-                return "오전 ${hourSystemString[0]} 시"
+                return "오전 ${hourSystemString[0]}${hourSystemString[1]}시"
+            }else{
+
+                hourSystemString = hourSystem.toString()
+
+                return "오전 ${hourSystemString[0]}시"
+
             }
 
         }else{

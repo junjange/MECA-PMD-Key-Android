@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.junjange.pmdkey">
+
     <!-- 앱이 블루투스 기기와 상호작용하기 위한 권한 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" /> <!-- 블루투스 검색하는 경우 -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- 앱이 블루투스에서 기기를 검색할 수 있도록 하는 경우 -->
@@ -28,7 +30,9 @@
         >
         <activity
             android:name=".ui.MapActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            />
         <activity
             android:name=".ui.MainActivity"
             android:exported="true" />
