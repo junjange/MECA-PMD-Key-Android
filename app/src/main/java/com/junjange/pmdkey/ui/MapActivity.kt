@@ -1,26 +1,20 @@
 package com.junjange.pmdkey.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyEvent.ACTION_UP
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.junjange.pmdkey.BuildConfig
-import com.junjange.pmdkey.R
 import com.junjange.pmdkey.adapter.CustomBalloonAdapter
 import com.junjange.pmdkey.adapter.KakaoLocalAdapter
 import com.junjange.pmdkey.adapter.MarkerEventListener
@@ -28,13 +22,11 @@ import com.junjange.pmdkey.data.ModelKakaoLocal
 import com.junjange.pmdkey.data.ResultSearchKeyword
 import com.junjange.pmdkey.databinding.ActivityMapBinding
 import com.junjange.pmdkey.network.KakaoLocalInterface
-import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.navi.Constants
 import com.kakao.sdk.navi.NaviClient
 import com.kakao.sdk.navi.model.CoordType
 import com.kakao.sdk.navi.model.Location
 import com.kakao.sdk.navi.model.NaviOption
-import net.daum.mf.map.api.CalloutBalloonAdapter
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -92,7 +84,6 @@ class MapActivity : AppCompatActivity() {
 
             // EditText 에 포커스가 갔을 때 ClearButton 활성화
             this.setOnFocusChangeListener { v, hasFocus ->
-                Log.d("Ttt", hasFocus.toString())
                 if (hasFocus) {
                     binding.textClearButton.visibility = View.VISIBLE
                 } else {
@@ -200,18 +191,20 @@ class MapActivity : AppCompatActivity() {
                     document.y.toDouble())
                 listItems.add(item)
 
-                // 지도에 마커 추가
-                val point = MapPOIItem()
-                point.apply {
-                    itemName = document.place_name // 마커 이름
-                    mapPoint = MapPoint.mapPointWithGeoCoord( // 좌표
-                        document.y.toDouble(),
-                        document.x.toDouble()
-                    )
-                    markerType = MapPOIItem.MarkerType.BluePin // 마커 모양
-                    selectedMarkerType = MapPOIItem.MarkerType.RedPin // 클릭 시 마커 모양
-                }
-                binding.mapView.addPOIItem(point)
+                addMarker(document.place_name, document.x, document.y)
+
+//                // 지도에 마커 추가
+//                val point = MapPOIItem()
+//                point.apply {
+//                    itemName = document.place_name // 마커 이름
+//                    mapPoint = MapPoint.mapPointWithGeoCoord( // 좌표
+//                        document.y.toDouble(),
+//                        document.x.toDouble()
+//                    )
+//                    markerType = MapPOIItem.MarkerType.BluePin // 마커 모양
+//                    selectedMarkerType = MapPOIItem.MarkerType.RedPin // 클릭 시 마커 모양
+//                }
+//                binding.mapView.addPOIItem(point)
             }
             listAdapter.notifyDataSetChanged()
 
@@ -224,28 +217,24 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
+    private fun addMarker(name : String, x : String, y : String){
 
-    fun kakaoNavi(){
-
-        // 카카오내비 앱으로 길 안내
-        if (NaviClient.instance.isKakaoNaviInstalled(this)) {
-            // 카카오내비 앱으로 길 안내 - WGS84
-            startActivity(
-                NaviClient.instance.navigateIntent(
-                    Location("카카오 판교오피스", "127.108640", "37.402111"),
-                    NaviOption(coordType = CoordType.WGS84)
-                )
+        // 지도에 마커 추가
+        val point = MapPOIItem()
+        point.apply {
+            itemName = name// 마커 이름
+            mapPoint = MapPoint.mapPointWithGeoCoord( // 좌표
+                y.toDouble(),
+                x.toDouble()
             )
-        } else {
-            // 카카오내비 설치 페이지로 이동
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(Constants.WEB_NAVI_INSTALL)
-                ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            )
+            markerType = MapPOIItem.MarkerType.BluePin // 마커 모양
+            selectedMarkerType = MapPOIItem.MarkerType.RedPin // 클릭 시 마커 모양
         }
+        binding.mapView.addPOIItem(point)
+
     }
+
+
 
     /**
      * 키보드 이외의 영역을 터치했을 때, 키보드를 숨기는 동작

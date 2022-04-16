@@ -56,6 +56,7 @@ import com.kakao.sdk.navi.model.CoordType
 import com.kakao.sdk.navi.model.NaviOption
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
+import net.daum.mf.map.api.MapView
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -68,6 +69,8 @@ class MainActivity : AppCompatActivity() {
     private var baseDate = "20210510"  // 발표 일자
     private var baseTime = "1400"      // 발표 시각
     private var curPoint : Point? = null    // 현재 위치의 격자 좌표를 저장할 포인트
+    private var parkingPMDX : Double = 0.0
+    private var parkingPMDY : Double = 0.0
 
     @SuppressLint("SetTextI18n", "MissingPermission")
     @RequiresApi(Build.VERSION_CODES.S)
@@ -75,6 +78,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = setContentView(this, R.layout.activity_main)
         binding.mainActivity = this
+
+
 
 
         // Get permission
@@ -128,10 +133,14 @@ class MainActivity : AppCompatActivity() {
         // 내 위치 위경도 가져와서 날씨 정보 설정하기
         requestLocation()
 
+
+
         // <새로고침> 버튼 누를 때 위치 정보 & 날씨 정보 다시 가져오기
         binding.btnRefresh.setOnClickListener {
             requestLocation()
         }
+
+
     }
 
     fun onClickButtonMap(view: View){
@@ -155,6 +164,24 @@ class MainActivity : AppCompatActivity() {
             } else{ // 블루투스 켜져있으면 블루투스 비활성화
                 bluetoothAdapter?.disable()
                 binding.buggyImage.setImageResource(R.drawable.mobility_0)
+
+                Log.d("ttt", parkingPMDX.toString())
+                Log.d("ttt", parkingPMDY.toString())
+
+                // 지도에 마커 추가
+                val point = MapPOIItem()
+//                point.apply {
+//                    itemName = "MY PMD" // 마커 이름
+//                    mapPoint = MapPoint.mapPointWithGeoCoord( // 좌표
+//                        parkingPMDX,
+//                        parkingPMDY
+//                    )
+//                    markerType = MapPOIItem.MarkerType.BluePin // 마커 모양
+//                    selectedMarkerType = MapPOIItem.MarkerType.RedPin // 클릭 시 마커 모양
+//                }
+//                mapView.addPOIItem(point)
+
+
 
             }
         }
@@ -317,6 +344,9 @@ class MainActivity : AppCompatActivity() {
                 override fun onLocationResult(p0: LocationResult?) {
                     p0?.let {
                         for (location in it.locations) {
+                            parkingPMDX = location.latitude
+                            parkingPMDY = location.longitude
+
                             // 현재 위치의 위경도를 격자 좌표로 변환
                             curPoint = Common().dfsXyConv(location.latitude, location.longitude)
 
@@ -331,6 +361,8 @@ class MainActivity : AppCompatActivity() {
 
             // 내 위치 실시간으로 감지
             locationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+
+
         } catch (e : SecurityException) {
             e.printStackTrace()
         }
