@@ -17,12 +17,14 @@ import android.widget.Toast
 
 import android.content.IntentFilter
 import android.content.BroadcastReceiver
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.location.Location
 import android.location.LocationManager
 import android.media.tv.TvContract.Programs.Genres.encode
+import android.net.Uri
 import android.net.Uri.encode
 import android.os.Build
 import android.os.Looper
@@ -49,6 +51,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import android.util.Base64
 import com.junjange.pmdkey.databinding.ActivityMapBinding
+import com.kakao.sdk.navi.NaviClient
+import com.kakao.sdk.navi.model.CoordType
+import com.kakao.sdk.navi.model.NaviOption
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 
@@ -336,7 +341,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
 
         // Don't forget to unregister the ACTION_FOUND receiver.
-        unregisterReceiver(receiver)
+//        unregisterReceiver(receiver)
     }
 
     // 선택한 기기와 블루투스 연결하기

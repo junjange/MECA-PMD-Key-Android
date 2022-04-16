@@ -76,6 +76,9 @@ dependencies {
 
     // Kakao map
     implementation files('libs/libDaumMapAndroid.jar')
+    
+    // 카카오내비
+    implementation "com.kakao.sdk:v2-navi:2.9.0"
 
 
 }
