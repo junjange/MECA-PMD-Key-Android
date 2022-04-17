@@ -50,28 +50,36 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import android.util.Base64
+import androidx.activity.viewModels
 import com.junjange.pmdkey.databinding.ActivityMapBinding
+import com.junjange.pmdkey.room.PmdEntity
 import com.kakao.sdk.navi.NaviClient
 import com.kakao.sdk.navi.model.CoordType
 import com.kakao.sdk.navi.model.NaviOption
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
-    var bluetoothAdapter: BluetoothAdapter? = null
+
     private val REQUEST_ENABLE_BT = 1
     var pairedDevices: Set<BluetoothDevice>? = null
     var btArrayAdapter: ArrayAdapter<String?>? = null
     var deviceAddressArray: ArrayList<String>? = null
+    var myPmd = listOf<PmdEntity>() // 전화번호부
+
 
     private var baseDate = "20210510"  // 발표 일자
     private var baseTime = "1400"      // 발표 시각
     private var curPoint : Point? = null    // 현재 위치의 격자 좌표를 저장할 포인트
-    private var parkingPMDX : Double = 0.0
-    private var parkingPMDY : Double = 0.0
 
+
+    lateinit var binding: ActivityMainBinding
+    var bluetoothAdapter: BluetoothAdapter? = null
+    private val viewModel: PmdViewModel by viewModels()
     @SuppressLint("SetTextI18n", "MissingPermission")
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,8 +138,7 @@ class MainActivity : AppCompatActivity() {
         // 오늘 날짜 텍스트뷰 설정
         binding.tvDate.text = SimpleDateFormat("MM월 dd일", Locale.getDefault()).format(Calendar.getInstance().time) + "날씨"
 
-        // 내 위치 위경도 가져와서 날씨 정보 설정하기
-        requestLocation()
+
 
 
 
@@ -139,6 +146,23 @@ class MainActivity : AppCompatActivity() {
         binding.btnRefresh.setOnClickListener {
             requestLocation()
         }
+
+        CoroutineScope(Dispatchers.Main).launch{
+            viewModel.getAll().observe(this@MainActivity, { pmd ->
+                myPmd = pmd
+                Log.d("ttt", pmd.toString())
+                Log.d("ttt", pmd.size.toString())
+                Log.d("ttt", myPmd.toString())
+
+
+            })
+
+            // 내 위치 위경도 가져와서 날씨 정보 설정하기
+            requestLocation()
+
+        }
+
+
 
 
     }
@@ -165,21 +189,10 @@ class MainActivity : AppCompatActivity() {
                 bluetoothAdapter?.disable()
                 binding.buggyImage.setImageResource(R.drawable.mobility_0)
 
-                Log.d("ttt", parkingPMDX.toString())
-                Log.d("ttt", parkingPMDY.toString())
-
-                // 지도에 마커 추가
-                val point = MapPOIItem()
-//                point.apply {
-//                    itemName = "MY PMD" // 마커 이름
-//                    mapPoint = MapPoint.mapPointWithGeoCoord( // 좌표
-//                        parkingPMDX,
-//                        parkingPMDY
-//                    )
-//                    markerType = MapPOIItem.MarkerType.BluePin // 마커 모양
-//                    selectedMarkerType = MapPOIItem.MarkerType.RedPin // 클릭 시 마커 모양
-//                }
-//                mapView.addPOIItem(point)
+                requestLocation()
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.update(myPmd[0])
+                }
 
 
 
@@ -201,7 +214,6 @@ class MainActivity : AppCompatActivity() {
             deviceAddressArray?.add(deviceHardwareAddress)
         }
 
-        Log.d("ddd", btArrayAdapter.toString())
     }
 
     // 주변 기기 검색하기
@@ -313,7 +325,7 @@ class MainActivity : AppCompatActivity() {
                     binding.weatherRecyclerView.adapter = WeatherAdapter(weatherArr)
 
                     // 토스트 띄우기
-                    Toast.makeText(applicationContext, it[0].fcstDate + ", " + it[0].fcstTime + "의 날씨 정보입니다.", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(applicationContext, it[0].fcstDate + ", " + it[0].fcstTime + "의 날씨 정보입니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -344,8 +356,9 @@ class MainActivity : AppCompatActivity() {
                 override fun onLocationResult(p0: LocationResult?) {
                     p0?.let {
                         for (location in it.locations) {
-                            parkingPMDX = location.latitude
-                            parkingPMDY = location.longitude
+                            myPmd[0].myPmdLocationX = location.latitude.toString()
+                            myPmd[0].myPmdLocationY = location.longitude.toString()
+
 
                             // 현재 위치의 위경도를 격자 좌표로 변환
                             curPoint = Common().dfsXyConv(location.latitude, location.longitude)

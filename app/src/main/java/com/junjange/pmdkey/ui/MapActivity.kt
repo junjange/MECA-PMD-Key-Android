@@ -12,9 +12,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.junjange.pmdkey.BuildConfig
+import com.junjange.pmdkey.R
 import com.junjange.pmdkey.adapter.CustomBalloonAdapter
 import com.junjange.pmdkey.adapter.KakaoLocalAdapter
 import com.junjange.pmdkey.adapter.MarkerEventListener
@@ -27,6 +29,9 @@ import com.kakao.sdk.navi.NaviClient
 import com.kakao.sdk.navi.model.CoordType
 import com.kakao.sdk.navi.model.Location
 import com.kakao.sdk.navi.model.NaviOption
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -50,7 +55,10 @@ class MapActivity : AppCompatActivity() {
     private val listAdapter = KakaoLocalAdapter(listItems)    // 리사이클러 뷰 어댑터
     private var pageNumber = 1      // 검색 페이지 번호
     private var keyword = ""        // 검색 키워드
-    private val eventListener = MarkerEventListener(this)   // 마커 클릭 이벤트 리스너
+    val eventListener = MarkerEventListener(this)   // 마커 클릭 이벤트 리스너
+    private val viewModel: PmdViewModel by viewModels()
+    private var parkingPMDX : Double = 0.0
+    private var parkingPMDY : Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +69,7 @@ class MapActivity : AppCompatActivity() {
 
         binding.mapView.setPOIItemEventListener(eventListener)  // 마커 클릭 이벤트 리스너 등록
         binding.mapView.setCalloutBalloonAdapter(customBalloonAdapter)  // 커스텀 말풍선 등록
+        addMyPmdMarker()
 
 
         // 현재 위치 추적
@@ -112,10 +121,17 @@ class MapActivity : AppCompatActivity() {
 
             }
         }
+
         binding.btnCurrentPosition.setOnClickListener {
-            Log.d("ttt"," tttttt")
 
             binding.mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
+        }
+
+        binding.btnMyPmdCurrentPosition.setOnClickListener {
+            binding.mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
+            val mapPoint = MapPoint.mapPointWithGeoCoord(parkingPMDX, parkingPMDY)
+            binding.mapView.setMapCenterPointAndZoomLevel(mapPoint, 1, true)
+
         }
 
         // ClearButton 눌렀을 때 쿼리 Clear
@@ -124,28 +140,61 @@ class MapActivity : AppCompatActivity() {
             binding.rvList.visibility = View.GONE
         }
 
-        binding.balanceCheckCard.setOnClickListener {
 
-            // 카카오내비 앱으로 길 안내
-            if (NaviClient.instance.isKakaoNaviInstalled(this)) {
-                // 카카오내비 앱으로 길 안내 - WGS84
-                startActivity(
-                    NaviClient.instance.navigateIntent(
-                        Location("카카오 판교오피스", "127.108640", "37.402111"),
-                        NaviOption(coordType = CoordType.WGS84)
+//        binding.balanceCheckCard.setOnClickListener {
+//
+//            // 카카오내비 앱으로 길 안내
+//            if (NaviClient.instance.isKakaoNaviInstalled(this)) {
+//                // 카카오내비 앱으로 길 안내 - WGS84
+//                startActivity(
+//                    NaviClient.instance.navigateIntent(
+//                        Location("카카오 판교오피스", "127.108640", "37.402111"),
+//                        NaviOption(coordType = CoordType.WGS84)
+//                    )
+//                )
+//            } else {
+//                // 카카오내비 설치 페이지로 이동
+//                startActivity(
+//                    Intent(
+//                        Intent.ACTION_VIEW,
+//                        Uri.parse(Constants.WEB_NAVI_INSTALL)
+//                    ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                )
+//            }
+//
+//        }
+
+
+    }
+
+    private fun addMyPmdMarker(){
+        CoroutineScope(Dispatchers.Main).launch{
+            viewModel.getAll().observe(this@MapActivity, { pmd ->
+                parkingPMDX = pmd[0].myPmdLocationX.toDouble()
+                parkingPMDY = pmd[0].myPmdLocationY.toDouble()
+
+
+                // 지도에 마커 추가
+                val point = MapPOIItem()
+                point.apply {
+                    itemName = "MY PMD"// 마커 이름
+                    mapPoint = MapPoint.mapPointWithGeoCoord( // 좌표
+                        parkingPMDX,
+                        parkingPMDY
                     )
-                )
-            } else {
-                // 카카오내비 설치 페이지로 이동
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(Constants.WEB_NAVI_INSTALL)
-                    ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                )
-            }
+                    markerType = MapPOIItem.MarkerType.CustomImage // 마커 모양
+                    customImageResourceId = R.drawable.pmd_marker  // 커스텀 마커 이미지
+                    selectedMarkerType = MapPOIItem.MarkerType.CustomImage // 클릭 시 마커 모양
+                    customSelectedImageResourceId = R.drawable.pmd_marker // 클릭 시 커스텀 마커 이미지
+                    isCustomImageAutoscale = true      // 커스텀 마커 이미지 크기 자동 조정
+                    setCustomImageAnchor(0.5f, 1.0f)    // 마커 이미지 기준점
+                }
+                binding.mapView.addPOIItem(point)
 
+            })
         }
+
+
 
     }
 
@@ -181,6 +230,8 @@ class MapActivity : AppCompatActivity() {
             // 검색 결과 있음
             listItems.clear()                   // 리스트 초기화
             binding.mapView.removeAllPOIItems() // 지도의 마커 모두 제거
+            addMyPmdMarker() // My PMD 마커 추가
+
             for (document in searchResult!!.documents) {
 
                 // 결과를 리사이클러 뷰에 추가
@@ -191,20 +242,18 @@ class MapActivity : AppCompatActivity() {
                     document.y.toDouble())
                 listItems.add(item)
 
-                addMarker(document.place_name, document.x, document.y)
-
-//                // 지도에 마커 추가
-//                val point = MapPOIItem()
-//                point.apply {
-//                    itemName = document.place_name // 마커 이름
-//                    mapPoint = MapPoint.mapPointWithGeoCoord( // 좌표
-//                        document.y.toDouble(),
-//                        document.x.toDouble()
-//                    )
-//                    markerType = MapPOIItem.MarkerType.BluePin // 마커 모양
-//                    selectedMarkerType = MapPOIItem.MarkerType.RedPin // 클릭 시 마커 모양
-//                }
-//                binding.mapView.addPOIItem(point)
+                // 지도에 마커 추가
+                val point = MapPOIItem()
+                point.apply {
+                    itemName = document.place_name // 마커 이름
+                    mapPoint = MapPoint.mapPointWithGeoCoord( // 좌표
+                        document.y.toDouble(),
+                        document.x.toDouble()
+                    )
+                    markerType = MapPOIItem.MarkerType.BluePin // 마커 모양
+                    selectedMarkerType = MapPOIItem.MarkerType.RedPin // 클릭 시 마커 모양
+                }
+                binding.mapView.addPOIItem(point)
             }
             listAdapter.notifyDataSetChanged()
 
@@ -216,25 +265,6 @@ class MapActivity : AppCompatActivity() {
             Toast.makeText(this, "검색 결과가 없습니다", Toast.LENGTH_SHORT).show()
         }
     }
-
-    private fun addMarker(name : String, x : String, y : String){
-
-        // 지도에 마커 추가
-        val point = MapPOIItem()
-        point.apply {
-            itemName = name// 마커 이름
-            mapPoint = MapPoint.mapPointWithGeoCoord( // 좌표
-                y.toDouble(),
-                x.toDouble()
-            )
-            markerType = MapPOIItem.MarkerType.BluePin // 마커 모양
-            selectedMarkerType = MapPOIItem.MarkerType.RedPin // 클릭 시 마커 모양
-        }
-        binding.mapView.addPOIItem(point)
-
-    }
-
-
 
     /**
      * 키보드 이외의 영역을 터치했을 때, 키보드를 숨기는 동작

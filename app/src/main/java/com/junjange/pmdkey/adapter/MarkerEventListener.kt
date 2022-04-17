@@ -30,10 +30,6 @@ class MarkerEventListener(val context: Context): MapView.POIItemEventListener {
     }
 
     override fun onCalloutBalloonOfPOIItemTouched(mapView: MapView?, poiItem: MapPOIItem?, buttonType: MapPOIItem.CalloutBalloonButtonType?) {
-        val intent = Intent(  NaviClient.instance.navigateIntent(
-            Location(poiItem?.itemName.toString(), poiItem?.mapPoint?.mapPointGeoCoord?.longitude.toString(),  poiItem?.mapPoint?.mapPointGeoCoord?.latitude.toString()),
-            NaviOption(coordType = CoordType.WGS84)
-        ))
 
         // 말풍선 클릭 시
         val builder = AlertDialog.Builder(context)
