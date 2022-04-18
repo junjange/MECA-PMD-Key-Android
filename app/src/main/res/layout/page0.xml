@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_screen1"
+    android:orientation="vertical"
+    android:gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="PM을 탈 때 꼭 알아야 할 안전수칙"
+        android:textColor="@android:color/white"
+        android:textSize="24dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="PMD KEY 튜토리얼 페이지를 보고\n 지켜야 하는 안전수칙을 한눈에 확인해보자!"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:layout_marginBottom="30dp"/>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:src="@drawable/tutorial_start">
+
+    </ImageView>
+
+
+
+
+
+</LinearLayout>

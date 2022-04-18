@@ -88,8 +88,6 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivity = this
 
 
-
-
         // Get permission
         val permissionList = arrayOf<String>(
             // 위치 권한
@@ -103,6 +101,21 @@ class MainActivity : AppCompatActivity() {
 
         // 권한 요청
         ActivityCompat.requestPermissions(this@MainActivity, permissionList, 1)
+
+        // 튜토리얼 최초 실행 여부를 판단 ->>>
+        val pref = getSharedPreferences("checkFirst", MODE_PRIVATE)
+        val checkFirst = pref.getBoolean("checkFirst", false)
+
+        // false일 경우 최초 실행
+        if (!checkFirst) {
+            // 앱 최초 실행시 하고 싶은 작업
+            val editor = pref.edit()
+            editor.putBoolean("checkFirst", true)
+            editor.apply()
+            finish()
+            val intent = Intent(this@MainActivity, TutorialActivity::class.java)
+            startActivity(intent)
+        }
 
 
 
@@ -139,9 +152,6 @@ class MainActivity : AppCompatActivity() {
         binding.tvDate.text = SimpleDateFormat("MM월 dd일", Locale.getDefault()).format(Calendar.getInstance().time) + "날씨"
 
 
-
-
-
         // <새로고침> 버튼 누를 때 위치 정보 & 날씨 정보 다시 가져오기
         binding.btnRefresh.setOnClickListener {
             requestLocation()
@@ -150,11 +160,6 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch{
             viewModel.getAll().observe(this@MainActivity, { pmd ->
                 myPmd = pmd
-                Log.d("ttt", pmd.toString())
-                Log.d("ttt", pmd.size.toString())
-                Log.d("ttt", myPmd.toString())
-
-
             })
 
             // 내 위치 위경도 가져와서 날씨 정보 설정하기
@@ -163,12 +168,15 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
     }
 
     fun onClickButtonMap(view: View){
         startActivity(Intent(this@MainActivity,MapActivity::class.java))
+
+    }
+
+    fun onClickButtonTutorial(view: View){
+        startActivity(Intent(this@MainActivity,TutorialActivity::class.java))
 
     }
 

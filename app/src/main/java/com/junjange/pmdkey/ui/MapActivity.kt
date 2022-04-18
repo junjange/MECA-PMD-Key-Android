@@ -1,8 +1,6 @@
 package com.junjange.pmdkey.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -24,11 +22,6 @@ import com.junjange.pmdkey.data.ModelKakaoLocal
 import com.junjange.pmdkey.data.ResultSearchKeyword
 import com.junjange.pmdkey.databinding.ActivityMapBinding
 import com.junjange.pmdkey.network.KakaoLocalInterface
-import com.kakao.sdk.navi.Constants
-import com.kakao.sdk.navi.NaviClient
-import com.kakao.sdk.navi.model.CoordType
-import com.kakao.sdk.navi.model.Location
-import com.kakao.sdk.navi.model.NaviOption
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -139,32 +132,6 @@ class MapActivity : AppCompatActivity() {
             binding.etSearchField.text.clear()
             binding.rvList.visibility = View.GONE
         }
-
-
-//        binding.balanceCheckCard.setOnClickListener {
-//
-//            // 카카오내비 앱으로 길 안내
-//            if (NaviClient.instance.isKakaoNaviInstalled(this)) {
-//                // 카카오내비 앱으로 길 안내 - WGS84
-//                startActivity(
-//                    NaviClient.instance.navigateIntent(
-//                        Location("카카오 판교오피스", "127.108640", "37.402111"),
-//                        NaviOption(coordType = CoordType.WGS84)
-//                    )
-//                )
-//            } else {
-//                // 카카오내비 설치 페이지로 이동
-//                startActivity(
-//                    Intent(
-//                        Intent.ACTION_VIEW,
-//                        Uri.parse(Constants.WEB_NAVI_INSTALL)
-//                    ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//                )
-//            }
-//
-//        }
-
-
     }
 
     private fun addMyPmdMarker(){
