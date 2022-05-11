@@ -1,6 +1,7 @@
 package com.junjange.pmdkey.ui
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -22,9 +23,12 @@ import com.junjange.pmdkey.data.ModelKakaoLocal
 import com.junjange.pmdkey.data.ResultSearchKeyword
 import com.junjange.pmdkey.databinding.ActivityMapBinding
 import com.junjange.pmdkey.network.KakaoLocalInterface
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.junjange.pmdkey.util.textChangesToFlow
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -33,8 +37,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.coroutines.CoroutineContext
 
 
+@DelicateCoroutinesApi
 class MapActivity : AppCompatActivity() {
 
     companion object {
@@ -53,12 +59,21 @@ class MapActivity : AppCompatActivity() {
     private var parkingPMDX : Double = 0.0
     private var parkingPMDY : Double = 0.0
 
+    private var myCoroutineJob : Job = Job()
+    private val myCoroutineContext: CoroutineContext
+        get() = Dispatchers.IO + myCoroutineJob
+
+    // 서치뷰 에딧 텍스트
+    private lateinit var mySearchViewEditText: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         val customBalloonAdapter = CustomBalloonAdapter(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+
 
         binding.mapView.setPOIItemEventListener(eventListener)  // 마커 클릭 이벤트 리스너 등록
         binding.mapView.setCalloutBalloonAdapter(customBalloonAdapter)  // 커스텀 말풍선 등록
@@ -92,6 +107,36 @@ class MapActivity : AppCompatActivity() {
                     binding.textClearButton.visibility = View.GONE
                 }
             }
+
+            // 서치뷰에서 에딧텍스트를 가져온다.
+            mySearchViewEditText = binding.etSearchField
+
+            binding.rvList.visibility = View.VISIBLE
+            GlobalScope.launch(context = myCoroutineContext){
+
+                // editText 가 변경되었을때
+                val editTextFlow = mySearchViewEditText.textChangesToFlow()
+
+                editTextFlow
+                    // 연산자들
+                    // 입려되고 나서 0.2초 뒤에 받는다
+                    .debounce(800)
+                    .filter {
+                        it?.length!! > 0
+                    }
+                    .onEach {
+                        Log.d(TAG, "flow로 받는다 $it")
+
+                        // 해당 검색어로 api 호출
+                        keyword = it.toString()
+                        pageNumber = 1
+                        searchKeyword(keyword, pageNumber)
+
+//                        searchPhotoApiCall(it.toString())
+                    }
+                    .launchIn(this)
+            }
+
         }
 
         binding.etSearchField.setOnKeyListener { _, keyCode, event ->
@@ -193,6 +238,8 @@ class MapActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     fun addItemsAndMarkers(searchResult: ResultSearchKeyword?) {
         if (!searchResult?.documents.isNullOrEmpty()) {
+            binding.rvList.visibility = View.VISIBLE
+            binding.noResultCard.visibility = View.GONE
 
             // 검색 결과 있음
             listItems.clear()                   // 리스트 초기화
@@ -227,9 +274,10 @@ class MapActivity : AppCompatActivity() {
 
 
         } else {
-
             // 검색 결과 없음
-            Toast.makeText(this, "검색 결과가 없습니다", Toast.LENGTH_SHORT).show()
+            binding.rvList.visibility = View.GONE
+            binding.noResultCard.visibility = View.VISIBLE
+
         }
     }
 
@@ -261,6 +309,7 @@ class MapActivity : AppCompatActivity() {
     override fun onDestroy() {
         listItems.clear()                   // 리스트 초기화
         binding.mapView.removeAllPOIItems() // 지도의 마커 모두 제거
+        myCoroutineContext.cancel()  // MemoryLeak 방지를 위해 myCoroutineContext 해제
         super.onDestroy()
     }
 

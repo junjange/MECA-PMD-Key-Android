@@ -304,6 +304,7 @@ class MainActivity : AppCompatActivity() {
             // 응답 성공 시
             override fun onResponse(call: Call<WEATHER>, response: Response<WEATHER>) {
                 if (response.isSuccessful) {
+                    Log.d("ttt", response.body().toString())
                     // 날씨 정보 가져오기
                     val it: List<ITEM> = response.body()!!.response.body.items.item
 
