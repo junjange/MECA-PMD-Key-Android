@@ -24,7 +24,7 @@
 
 <img width="30%" src="https://blog.kakaocdn.net/dn/eutYRZ/btrDDrftGru/bay5CV3hhozDQ4HhZwu6R0/img.jpg"><img width="30%" src="https://blog.kakaocdn.net/dn/bxVqgG/btrDGKktAIK/NlLFUCntW6isA2jsTucnc1/img.jpg"><img width="30%" src="https://blog.kakaocdn.net/dn/cJKkdM/btrDGMCqEr9/oK6B2pfJqKkf7YyDRNZBk0/img.jpg">
 
- **길 찾기**
+ - **길 찾기**
  
 <img width="30%" src="https://blog.kakaocdn.net/dn/0DT1H/btrDBuKhH4F/55CIxu0Y8hQflBtgBq3B31/img.jpg">
 
