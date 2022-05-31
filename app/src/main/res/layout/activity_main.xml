@@ -25,14 +25,16 @@
             android:orientation="vertical"
             android:gravity="center">
 
+
             <ImageView
                 android:id="@+id/buggy_image"
                 android:layout_width="wrap_content"
                 android:layout_height="200dp"
-                android:src="@drawable/mobility_0"
-                android:layout_margin="20dp"
-                />
-
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/mobility_0" />
 
             <TextView
                 android:id="@+id/text_status"
@@ -41,143 +43,172 @@
                 android:text="status"
                 android:textSize="20dp"/>
 
-            <Button
-                android:id="@+id/btn_paired"
-                android:text="Paired Devices"
-                android:onClick="@{mainActivity::onClickButtonPaired}"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content" />
+<!--            <Button-->
+<!--                android:id="@+id/btn_paired"-->
+<!--                android:text="Paired Devices"-->
+<!--                android:onClick="@{mainActivity::onClickButtonPaired}"-->
+<!--                android:layout_width="200dp"-->
+<!--                android:layout_height="wrap_content" />-->
 
-            <ToggleButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/ble_on_off_btn"
-                android:onClick="@{mainActivity :: onClickButtonBluetoothOnOff}"
-                />
+<!--            <ToggleButton-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/ble_on_off_btn"-->
+<!--                android:onClick="@{mainActivity :: onClickButtonBluetoothOnOff}"-->
+<!--                />-->
 
-            <Button
-                android:id="@+id/btn_search"
-                android:text="Search"
-                android:onClick="@{mainActivity :: onClickButtonSearch}"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"/>
+<!--            <Button-->
+<!--                android:id="@+id/btn_search"-->
+<!--                android:text="Search"-->
+<!--                android:onClick="@{mainActivity :: onClickButtonSearch}"-->
+<!--                android:layout_width="200dp"-->
+<!--                android:layout_height="wrap_content"/>-->
 
-            <Button
-                android:id="@+id/btn_send"
-                android:text="Send a"
-                android:onClick="@{mainActivity :: onClickButtonSend}"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"/>
-
-
-            <androidx.cardview.widget.CardView
+<!--            <Button-->
+<!--                android:id="@+id/btn_send"-->
+<!--                android:text="Send a"-->
+<!--                android:onClick="@{mainActivity :: onClickButtonSend}"-->
+<!--                android:layout_width="200dp"-->
+<!--                android:layout_height="wrap_content"/>-->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/power_btn"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:backgroundTint="@color/white"
-                android:clipToPadding="true"
-                android:layout_weight="1"
-                app:cardCornerRadius="16dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp">
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="#0054bb"
+                app:cardCornerRadius="15sp"
+                android:onClick="@{mainActivity :: onClickButtonBluetoothOnOff}"
+
+                >
 
 
-                <TextView
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="전원"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="24dp"
-                    android:layout_margin="10dp"
-                    android:visibility="visible"
-                    />
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_baseline_power_settings_new_24" />
 
 
-            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
-                    android:backgroundTint="@color/white"
-                    android:clipToPadding="true"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="16dp"
-                    android:layout_margin="5dp">
-
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageButton
-                            android:id="@+id/btn_map"
-                            android:layout_width="180dp"
-                            android:layout_height="180dp"
-                            android:background="@color/white"
-                            android:src="@drawable/main_map"
-                            android:onClick="@{mainActivity :: onClickButtonMap}" />
-
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="지도"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="24dp"
-                        android:layout_margin="10dp"
-                        android:visibility="visible"
-                        />
-
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
-                    android:backgroundTint="@color/white"
-                    android:clipToPadding="true"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="16dp"
-                    android:layout_margin="5dp">
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-
-                        <ImageButton
-                            android:id="@+id/btn_tutorial"
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:onClick="@{mainActivity :: onClickButtonTutorial}"
-                            android:src="@drawable/main_tutorial"/>
+                            android:layout_marginStart="11dp"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:text="전원"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
 
-                    </FrameLayout>
+                </LinearLayout>
 
-                    <TextView
+
+            </com.google.android.material.card.MaterialCardView>
+            <LinearLayout
+                android:id="@+id/linearLayout6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/search_btn"
+                    android:onClick="@{mainActivity :: onClickButtonMap}"
+                    android:layout_width="160dp"
+                    android:layout_height="120dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginBottom="15dp"
+                    android:backgroundTint="#0054bb"
+                    android:clipToPadding="true"
+                    app:cardCornerRadius="15sp">
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="안전수칙"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="24dp"
-                        android:layout_margin="10dp"
-                        />
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_baseline_map_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="sans-serif"
+                            android:text="지도"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
 
 
-                </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/hot_polls_btn"
+                    android:onClick="@{mainActivity :: onClickButtonTutorial}"
+                    android:layout_width="160dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="15dp"
+                    android:backgroundTint="#0054bb"
+                    android:clipToPadding="true"
+                    app:cardCornerRadius="15sp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_baseline_electric_scooter_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="sans-serif"
+                            android:text="안전수칙"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+
+                    </LinearLayout>
+
+
+                </com.google.android.material.card.MaterialCardView>
+
             </LinearLayout>
-
-
-
 
             <TextView
                 android:id="@+id/tvDate"
@@ -220,6 +251,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+
                 android:text="새로고침"/>
 
 

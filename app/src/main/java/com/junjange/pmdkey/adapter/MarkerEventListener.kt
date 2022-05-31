@@ -33,13 +33,13 @@ class MarkerEventListener(val context: Context): MapView.POIItemEventListener {
 
         // 말풍선 클릭 시
         val builder = AlertDialog.Builder(context)
-        val itemList = arrayOf("토스트", "길 찾기", "취소")
+        val itemList = arrayOf("길 찾기", "취소")
         builder.setTitle("${poiItem?.itemName}")
         builder.setItems(itemList) { dialog, which ->
             when(which) {
-                0 -> Toast.makeText(context, "토스트", Toast.LENGTH_SHORT).show()  // 토스트
-                1 -> kakaoNavi(poiItem?.itemName.toString(), poiItem?.mapPoint?.mapPointGeoCoord?.longitude.toString(), poiItem?.mapPoint?.mapPointGeoCoord?.latitude.toString())
-                2 -> dialog.dismiss()   // 대화상자 닫기
+//                0 -> Toast.makeText(context, "토스트", Toast.LENGTH_SHORT).show()  // 토스트
+                0 -> kakaoNavi(poiItem?.itemName.toString(), poiItem?.mapPoint?.mapPointGeoCoord?.longitude.toString(), poiItem?.mapPoint?.mapPointGeoCoord?.latitude.toString())
+                1 -> dialog.dismiss()   // 대화상자 닫기
             }
         }
         builder.show()

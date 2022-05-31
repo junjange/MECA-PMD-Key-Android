@@ -16,7 +16,7 @@ class CustomBalloonAdapter(inflater: LayoutInflater): CalloutBalloonAdapter {
     override fun getCalloutBalloon(poiItem: MapPOIItem?): View {
         // 마커 클릭 시 나오는 말풍선
         name.text = poiItem?.itemName
-        address.text = "getCalloutBalloon"
+        address.text = "${poiItem?.itemName} 가즈앗~"
         return mCalloutBalloon
     }
 

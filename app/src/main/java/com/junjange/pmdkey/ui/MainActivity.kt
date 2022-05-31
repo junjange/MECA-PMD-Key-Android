@@ -127,12 +127,13 @@ class MainActivity : AppCompatActivity() {
         if(bluetoothAdapter!=null){
 
             if (bluetoothAdapter?.isEnabled == false){
-                binding.bleOnOffBtn.isChecked = false
+//                binding.bleOnOffBtn.isChecked = false
+                binding.textStatus.text = "전원을 켜고 PMD를 주행해요."
                 binding.buggyImage.setImageResource(R.drawable.mobility_0)
 
             }else{
-
-                binding.bleOnOffBtn.isChecked = true
+                binding.textStatus.text = "안전 수칙에 맞게 안전주행 하세요!"
+//                binding.bleOnOffBtn.isChecked = true
                 binding.buggyImage.setImageResource(R.drawable.mobility_1)
             }
 
@@ -305,6 +306,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<WEATHER>, response: Response<WEATHER>) {
                 if (response.isSuccessful) {
                     Log.d("ttt", response.body().toString())
+                    binding.tvError.visibility = View.GONE
                     // 날씨 정보 가져오기
                     val it: List<ITEM> = response.body()!!.response.body.items.item
 
@@ -342,7 +344,7 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(call: Call<WEATHER>, t: Throwable) {
                 val tvError = findViewById<TextView>(R.id.tvError)
                 tvError.text = "api fail : " +  t.message.toString() + "\n 다시 시도해주세요."
-                tvError.visibility = View.VISIBLE
+//                tvError.visibility = View.VISIBLE
                 Log.d("api fail", t.message.toString())
             }
         })
