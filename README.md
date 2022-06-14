@@ -1,5 +1,14 @@
 # MECA-PMD-Key-Android🛵
 메카트로닉스 실습 앱 개발(개인 프로젝트) 
+
+## 📷 PMD Photos
+
+<img width="30%" src="https://blog.kakaocdn.net/dn/lELdt/btrEOIlyN0v/pWNg0tPbaKRzj0gXJpqBSk/img.png">      <img width="30%" src="https://blog.kakaocdn.net/dn/dj6dqV/btrENHAFh07/A5I0PJXtghWQrysi45szWk/img.png">
+
+## 👨‍🔧 PMD Demo Video
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/69571848/173570256-6f7934d8-aa4d-4cae-a325-2196d378f388.gif)
+
+
 ## 📖 Details of the app screens
 
 - **메인 페이지 & PMD 연결 & 주변 날씨 정보**
