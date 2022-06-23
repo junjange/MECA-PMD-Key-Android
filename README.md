@@ -47,7 +47,6 @@
 <img width="30%" src="https://blog.kakaocdn.net/dn/uW9lL/btrDDtrie0d/duO3aX01O5DGHq6N1oqxI1/img.jpg">
 <img width="30%" src="https://blog.kakaocdn.net/dn/blKhOj/btrDFwtkNnV/6vV9754DKO0oQQhjl1eLmk/img.jpg">
 
-
 ## 🛠️ ****Tech Stack****
 
 - Kotlin
@@ -56,6 +55,7 @@
 - retrofit2
 - Kakao map
 - Kakao navi
+- Kakao Local
 
 ## ****⚙️ Architecture****
 
@@ -66,7 +66,6 @@
 ## 📌 ****Part(Android)****
 
 - Android와 Arduino 블루투스 연결 
-- Android를 통해 PMD 시동 
 - 주변 날씨 정보
 - 공공 데이터 포털 오픈 API
 - Kakao Map을 통해 지도 구현 및 주소 검색
@@ -76,6 +75,6 @@
 
 ## 💡 ****Learned****
 
-- **블루투스** 연결을 통해 PMD의 시동을 켜보았다.
+- **블루투스** 연결을 통해 PMD의 **시동**을 켜보려했지만 **모터 컨트롤러**를 제어하지 못해 **실패**하게 되었다.
 - **retrofit2**을 통해 **공공 데이터 포털 오픈 API**와 **Kakao Map**의 데이터를 가져와 가공하였다.
 - **Coroutine flow debounce** 학습하고 Coroutine에 대해 심도있게 알게 되었다.
